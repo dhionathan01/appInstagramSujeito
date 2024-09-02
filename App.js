@@ -66,7 +66,7 @@ export default class App extends Component {
             <Image source={require('./src/img/send.png')} style={styles.send} />
           </TouchableOpacity>
         </View>
-        <FlatList showsHorizontalScrollIndicator={false} data={this.state.feed} renderItem={({item}) => <Lista data={item} />}/>
+        <FlatList showsHorizontalScrollIndicator={false} keyExtractor={(item) => item.id} data={this.state.feed} renderItem={({item}) => <Lista data={item} />}/>
       </View >
     );
   }
