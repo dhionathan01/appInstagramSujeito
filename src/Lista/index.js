@@ -7,7 +7,48 @@ export default class Lista extends Component {
         this.state = {
             feed: this.props.data,
         };
+        this.mostraLikes = this.mostraLikes.bind(this);
+        this.like = this.like.bind(this);
+        this.carregaIcone = this.carregaIcone.bind(this);
     }
+    carregaIcone(likeada) {
+        return likeada  ? require('../img/likeada.png')
+                        : require('../img/like.png');
+
+    }
+    mostraLikes(likers) {
+        let feed = this.state.feed;
+        if (feed.likers <= 0) {
+            return;
+        }
+        return (
+            <Text style={styles.likes}>
+                {feed.likers} {feed.likers > 1 ? 'curtidas' : 'curtida'}
+            </Text>
+        );
+    }
+
+    like() {
+        let feed = this.state.feed;
+        if (feed.likeada === true) {
+            this.setState({
+                feed: {
+                    ...feed,
+                    likeada: false,
+                    likers: feed.likers - 1,
+                },
+            });
+        } else {
+            this.setState({
+                feed: {
+                    ...feed,
+                    likeada: true,
+                    likers: feed.likers + 1,
+                },
+            });
+        }
+    }
+
     render() {
         return (
             <View style={styles.areaFeed}>
@@ -19,13 +60,15 @@ export default class Lista extends Component {
                 <Image style={styles.fotoPublicacao} source={{ uri: this.state.feed.imgPublicacao }} resizeMode="cover" />
 
                 <View style={styles.areaBtn}>
-                    <TouchableOpacity>
-                        <Image source={require('../img/like.png')} style={styles.iconelike} />
+                    <TouchableOpacity onPress={this.like}>
+                        <Image source={this.carregaIcone(this.state.feed.likeada)} style={styles.iconelike} />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.btnSend}>
                         <Image source={require('../img/send.png')} style={styles.iconelike} />
                     </TouchableOpacity>
                 </View>
+
+                {this.mostraLikes(this.state.feed.likers)}
                 <View style={styles.viewRodape}>
                     <Text style={styles.nomeRodape}>
                         {this.state.feed.nome}
@@ -88,5 +131,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#000',
         paddingLeft: 5,
+    },
+    likes: {
+        fontWeight: 'bold',
+        marginLeft: 5,
     },
 });
